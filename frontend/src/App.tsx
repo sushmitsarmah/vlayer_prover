@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Coins, ArrowUpDown, Menu, Shield, TrendingUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Coins, Menu, Shield, TrendingUp } from 'lucide-react';
+import { usePrivy } from '@privy-io/react-auth';
 
 interface CryptoToken {
   id: number;
@@ -20,6 +21,16 @@ interface Trade {
 }
 
 function App() {
+  const { ready, authenticated, login, logout, user } = usePrivy();
+
+  useEffect(() => {
+    if (ready && !authenticated) {
+      console.log("User is not authenticated");
+      login();
+    }
+  }, [ready, authenticated]);
+
+
   const [tokens] = useState<CryptoToken[]>([
     { id: 1, name: 'Ethereum', symbol: 'ETH', amount: 100, price: 3500 },
     { id: 2, name: 'Solana', symbol: 'SOL', amount: 1000, price: 125 },
@@ -70,9 +81,12 @@ function App() {
             <Coins className="h-6 w-6" />
             <span className="text-xl font-bold">CryptoTrader</span>
           </div>
-          <button className="p-2 hover:bg-indigo-700 rounded-lg">
+          {authenticated && <button className="p-2 hover:bg-indigo-700 rounded-lg" onClick={logout}>
+            <p>{user?.wallet?.address || "Wallet"}</p>
+          </button>}
+          {!authenticated && <button className="p-2 hover:bg-indigo-700 rounded-lg" onClick={login}>
             <Menu className="h-6 w-6" />
-          </button>
+          </button>}
         </div>
       </nav>
 
