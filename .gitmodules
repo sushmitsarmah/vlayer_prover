@@ -1,0 +1,3 @@
+[submodule "vlayer_trading_contracts"]
+	path = vlayer_trading_contracts
+	url = git@github.com:sushmitsarmah/vlayer_trading_contracts.git
